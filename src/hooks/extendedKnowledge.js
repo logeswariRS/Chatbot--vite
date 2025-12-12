@@ -920,3 +920,4 @@ export function searchExtendedKnowledge(topic, subtopic = null) {
   return null;
 }
 
+

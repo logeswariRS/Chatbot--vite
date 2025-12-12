@@ -40,7 +40,7 @@ const Header = ({
 
   return (
     <header className="bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-sm sticky top-0 z-40">
-      <div className="container mx-auto px-4 py-4 max-w-6xl flex items-center gap-3">
+      <div className={`container mx-auto px-4 py-4 max-w-6xl flex items-center gap-3 transition-all duration-300`}>
         <div 
           onClick={handleLogoClick}
           className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform duration-200 flex-1 group"
@@ -82,42 +82,17 @@ const Header = ({
             {darkMode ? <Sun className="w-4 h-4 animate-spin-slow" /> : <Moon className="w-4 h-4" />}
             <span className="hidden sm:inline">{darkMode ? 'Light' : 'Dark'}</span>
           </button>
-          <select
-            className="border-2 border-gray-300 rounded-xl px-3 py-2 text-sm bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 cursor-pointer"
-            value={currentConversationId || ''}
-            onChange={(e) => onSelectConversation(e.target.value)}
-         >
-            {conversations.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.title || 'Untitled'}
-              </option>
-            ))}
-          </select>
-
           <button
             onClick={() => {
               onCreateNewChat();
               if (onConfetti) onConfetti();
             }}
             className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 transform"
+            title="New Chat (Ctrl/Cmd + N)"
           >
             <PlusCircle className="w-4 h-4" /> 
             <span className="hidden sm:inline">New Chat</span>
           </button>
-
-          {currentConversation && (
-            <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to delete this conversation?')) {
-                  onDeleteConversation(currentConversation.id);
-                }
-              }}
-              className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 transform"
-            >
-              <Trash2 className="w-4 h-4" /> 
-              <span className="hidden sm:inline">Delete</span>
-            </button>
-          )}
         </div>
       </div>
 
