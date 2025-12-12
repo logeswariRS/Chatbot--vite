@@ -1,16 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import Header from './components/Header';
+import Confetti from './components/Confetti';
 import { useLocalStorage } from './hooks/useLocalStorage';
 
 function App() {
   const [conversations, setConversations] = useLocalStorage('conversations', []);
   const [currentConversationId, setCurrentConversationId] = useLocalStorage('currentConversationId', null);
   const [isLoading, setIsLoading] = useState(false);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('darkMode') === 'true';
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('darkMode') === 'true';
+    }
+    return false;
   });
-  const [personality, setPersonality] = useState('friendly');
+  const [personality, setPersonality] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('personality');
+      return stored || 'friendly';
+    }
+    return 'friendly';
+  });
 
   // Create initial conversation if none exists
   useEffect(() => {
@@ -77,16 +88,23 @@ function App() {
 
   // Sync dark mode with localStorage
   useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('darkMode', darkMode);
+      localStorage.setItem('personality', personality);
+      if (darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
-  }, [darkMode]);
+  }, [darkMode, personality]);
 
   return (
-    <div className={"min-h-screen " + (darkMode ? 'bg-gray-900' : 'bg-gray-50') + (darkMode ? ' dark' : '')}>
+    <div className={`min-h-screen transition-colors duration-300 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 dark' 
+        : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'
+    }`}>
       <Header 
         onCreateNewChat={createNewConversation}
         conversations={conversations}
@@ -98,8 +116,10 @@ function App() {
         setDarkMode={setDarkMode}
         personality={personality}
         setPersonality={setPersonality}
+        onConfetti={() => setConfettiTrigger(prev => prev + 1)}
       />
-      <main className="container mx-auto px-4 py-6 max-w-4xl">
+      <Confetti trigger={confettiTrigger} />
+      <main className="container mx-auto px-4 py-6 max-w-6xl">
         {currentConversation && (
           <ChatInterface
             conversation={currentConversation}

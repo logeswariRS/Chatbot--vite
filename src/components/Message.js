@@ -12,14 +12,18 @@ const Message = ({ message, onDelete, onLike, onCopy }) => {
   });
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} w-full`}>
+    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} w-full animate-fade-in`}>
       <div className={`flex items-end space-x-3 max-w-xs lg:max-w-md ${isUser ? 'flex-row-reverse space-x-reverse' : ''} w-full`}>
         {/* Avatar with ring */}
-        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ring-2 ${isUser ? 'ring-primary-400 bg-gradient-to-br from-primary-500 to-blue-400' : 'ring-gray-300 bg-gray-200'}`}>
+        <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ring-2 transition-all duration-300 hover:scale-110 hover:ring-4 ${
+          isUser 
+            ? 'ring-blue-400 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 animate-pulse-slow' 
+            : 'ring-purple-300 bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-800 dark:to-pink-800'
+        }`}>
           {isUser ? (
-            <User className="w-6 h-6 text-white" />
+            <User className="w-6 h-6 text-white drop-shadow-lg" />
           ) : (
-            <Bot className="w-6 h-6 text-gray-600" />
+            <Bot className="w-6 h-6 text-purple-600 dark:text-purple-300 drop-shadow-lg animate-bounce-slow" />
           )}
         </div>
 
@@ -27,24 +31,24 @@ const Message = ({ message, onDelete, onLike, onCopy }) => {
   <div className={`chat-bubble shadow-md group transition-all duration-200 transform hover:scale-[1.03] hover:shadow-lg ${isUser ? 'user-bubble bg-gradient-to-br from-primary-500 to-blue-500 text-white hover:ring-2 hover:ring-blue-300' : 'bot-bubble bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700'} relative`}>
           {/* Message actions for user messages */}
           {isUser && (
-            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10 transform translate-y-0 group-hover:translate-y-0">
               <button
                 title="Copy"
-                className="p-1 rounded hover:bg-blue-100 hover:text-blue-700 focus:outline-none"
+                className="p-2 rounded-lg bg-white/90 hover:bg-blue-100 hover:text-blue-700 focus:outline-none transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
                 onClick={() => onCopy && onCopy(message)}
               >
                 <Copy className="w-4 h-4" />
               </button>
               <button
                 title="Like"
-                className="p-1 rounded hover:bg-green-100 hover:text-green-700 focus:outline-none"
+                className="p-2 rounded-lg bg-white/90 hover:bg-pink-100 hover:text-pink-700 focus:outline-none transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
                 onClick={() => onLike && onLike(message)}
               >
                 <ThumbsUp className="w-4 h-4" />
               </button>
               <button
                 title="Delete"
-                className="p-1 rounded hover:bg-red-100 hover:text-red-700 focus:outline-none"
+                className="p-2 rounded-lg bg-white/90 hover:bg-red-100 hover:text-red-700 focus:outline-none transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
                 onClick={() => onDelete && onDelete(message)}
               >
                 <Trash2 className="w-4 h-4" />
