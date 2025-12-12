@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+  .dark body {
+    @apply bg-gray-900 text-gray-100;
+  }
+}
+
+@layer components {
+  .chat-bubble {
+    @apply max-w-xs lg:max-w-md px-4 py-2 rounded-lg shadow-sm;
+  }
+  
+  .user-bubble {
+    @apply bg-primary-500 text-white ml-auto;
+  }
+  .dark .user-bubble {
+    @apply bg-primary-700 text-white;
+  }
+  
+  .bot-bubble {
+    @apply bg-white text-gray-800 border border-gray-200;
+  }
+  .dark .bot-bubble {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .typing-indicator {
+    @apply flex space-x-1 items-center;
+  }
+  
+  .typing-dot {
+    @apply w-2 h-2 bg-gray-400 rounded-full animate-typing;
+  }
+  
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
