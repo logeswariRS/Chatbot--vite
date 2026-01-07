@@ -278,3 +278,5 @@ export function generateSmartResponse(userText, keywords, personality = 'friendl
 }
 
 
+
+

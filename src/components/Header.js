@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { PlusCircle, Trash2, Moon, Sun, Sparkles, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Moon, Sun, Settings, X, Edit2, Trash2, Check } from 'lucide-react';
 
 const Header = ({
   onCreateNewChat,
@@ -11,120 +11,177 @@ const Header = ({
   darkMode,
   setDarkMode,
   personality,
-  setPersonality,
-  onConfetti
+  setPersonality
 }) => {
-  const currentConversation = useMemo(
-    () => conversations.find((c) => c.id === currentConversationId) || null,
-    [conversations, currentConversationId]
-  );
+  const [editingId, setEditingId] = useState(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [showSettings, setShowSettings] = useState(false);
 
-  const [titleDraft, setTitleDraft] = useState(currentConversation?.title || '');
-  const [clickCount, setClickCount] = useState(0);
-
-  React.useEffect(() => {
-    setTitleDraft(currentConversation?.title || '');
-  }, [currentConversationId, currentConversation?.title]);
-
-  const handleLogoClick = () => {
-    setClickCount(prev => {
-      const newCount = prev + 1;
-      if (newCount === 5) {
-        if (onConfetti) onConfetti();
-        setClickCount(0);
-        return 0;
-      }
-      return newCount;
-    });
+  const handleEditStart = (conversation) => {
+    setEditingId(conversation.id);
+    setEditTitle(conversation.title);
   };
 
-  return (
-    <header className="bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700 backdrop-blur-sm shadow-sm sticky top-0 z-40">
-      <div className={`container mx-auto px-4 py-4 max-w-6xl flex items-center gap-3 transition-all duration-300`}>
-        <div 
-          onClick={handleLogoClick}
-          className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform duration-200 flex-1 group"
-        >
-          <Sparkles className="w-6 h-6 text-purple-500 group-hover:rotate-180 transition-transform duration-500" />
-          <span className="relative">
-            AI Chatbot
-            <Zap className="absolute -top-1 -right-6 w-4 h-4 text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity animate-pulse" />
-          </span>
-        </div>
+  const handleEditSave = (conversationId) => {
+    if (editTitle.trim()) {
+      onUpdateTitle(conversationId, editTitle.trim());
+    }
+    setEditingId(null);
+    setEditTitle('');
+  };
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <select
-            className="border-2 border-primary-300 rounded-xl px-3 py-2 text-sm bg-gradient-to-r from-primary-50 to-purple-50 text-primary-700 font-semibold shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 cursor-pointer dark:from-gray-800 dark:to-gray-700 dark:border-gray-600 dark:text-gray-200"
-            value={personality}
-            onChange={e => {
-              setPersonality(e.target.value);
-              if (onConfetti) onConfetti();
-            }}
-            title="Select AI Personality"
-          >
-            <option value="friendly">🤗 Friendly</option>
-            <option value="professional">💼 Professional</option>
-            <option value="humorous">😂 Humorous</option>
-            <option value="concise">✂️ Concise</option>
-          </select>
-          <button
-            onClick={() => {
-              if (setDarkMode) setDarkMode((d) => !d);
-              if (onConfetti) onConfetti();
-            }}
-            className={`inline-flex items-center gap-1 px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all duration-300 hover:scale-110 hover:shadow-lg transform ${
-              darkMode 
-                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 border-yellow-300 hover:from-yellow-300 hover:to-orange-300' 
-                : 'bg-gradient-to-r from-gray-800 to-gray-900 text-yellow-300 border-gray-700 hover:from-gray-700 hover:to-gray-800'
-            }`}
-            title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          >
-            {darkMode ? <Sun className="w-4 h-4 animate-spin-slow" /> : <Moon className="w-4 h-4" />}
-            <span className="hidden sm:inline">{darkMode ? 'Light' : 'Dark'}</span>
-          </button>
-          <button
-            onClick={() => {
-              onCreateNewChat();
-              if (onConfetti) onConfetti();
-            }}
-            className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 transform"
-            title="New Chat (Ctrl/Cmd + N)"
-          >
-            <PlusCircle className="w-4 h-4" /> 
-            <span className="hidden sm:inline">New Chat</span>
-          </button>
+  const handleEditCancel = () => {
+    setEditingId(null);
+    setEditTitle('');
+  };
+
+  const personalities = [
+    { value: 'friendly', label: 'Friendly' },
+    { value: 'professional', label: 'Professional' },
+    { value: 'humorous', label: 'Humorous' },
+    { value: 'concise', label: 'Concise' }
+  ];
+
+  return (
+    <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4 flex-1 overflow-x-auto">
+            <button
+              onClick={onCreateNewChat}
+              className="flex-shrink-0 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg"
+            >
+              <Plus className="w-4 h-4" />
+              <span>New Chat</span>
+            </button>
+
+            <div className="flex space-x-2 overflow-x-auto pb-2 flex-1">
+              {conversations.map((conversation) => (
+                <div
+                  key={conversation.id}
+                  className={`group flex-shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                    currentConversationId === conversation.id
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                  onClick={() => onSelectConversation(conversation.id)}
+                >
+                  {editingId === conversation.id ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') handleEditSave(conversation.id);
+                          if (e.key === 'Escape') handleEditCancel();
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-1 bg-transparent border-none outline-none text-sm"
+                        autoFocus
+                      />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditSave(conversation.id);
+                        }}
+                        className="p-1 hover:bg-white/20 rounded"
+                      >
+                        <Check className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditCancel();
+                        }}
+                        className="p-1 hover:bg-white/20 rounded"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-sm font-medium truncate max-w-[150px]">
+                        {conversation.title}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditStart(conversation);
+                        }}
+                        className="p-1 hover:bg-white/20 dark:hover:bg-gray-500 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Edit2 className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteConversation(conversation.id);
+                        }}
+                        className="p-1 hover:bg-red-500/20 rounded opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+              title={darkMode ? 'Light mode' : 'Dark mode'}
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+
+            <div className="relative">
+              <button
+                onClick={() => setShowSettings(!showSettings)}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+
+              {showSettings && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setShowSettings(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-20 p-2">
+                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2 px-2">
+                      Personality
+                    </div>
+                    {personalities.map((p) => (
+                      <button
+                        key={p.value}
+                        onClick={() => {
+                          setPersonality(p.value);
+                          setShowSettings(false);
+                        }}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                          personality === p.value
+                            ? 'bg-blue-500 text-white'
+                            : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-
-      {currentConversation && (
-        <div className="container mx-auto px-4 pb-4 max-w-6xl">
-          <input
-            type="text"
-            className="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-2 text-sm bg-white dark:bg-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 shadow-sm hover:shadow-md"
-            value={titleDraft}
-            placeholder="💬 Name your conversation..."
-            onChange={(e) => setTitleDraft(e.target.value)}
-            onBlur={() => {
-              if (titleDraft !== currentConversation.title) {
-                onUpdateTitle(currentConversation.id, titleDraft.trim() || 'Untitled');
-              }
-            }}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                e.target.blur();
-              }
-            }}
-          />
-        </div>
-      )}
     </header>
   );
 };
 
 export default Header;
-
-
-
-
-
-

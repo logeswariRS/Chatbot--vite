@@ -62,3 +62,5 @@ const Confetti = ({ trigger }) => {
 export default Confetti;
 
 
+
+
