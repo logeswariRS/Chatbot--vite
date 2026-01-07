@@ -4,7 +4,6 @@ import MessageInput from './MessageInput';
 import Toast from './Toast';
 import Confetti from './Confetti';
 import { useChatAPI } from '../hooks/useChatAPI';
-import { Heart, Copy, Trash2 } from 'lucide-react';
 
 const ChatInterface = ({ conversation, onUpdateConversation, isLoading, setIsLoading, personality }) => {
   const [inputValue, setInputValue] = useState('');
