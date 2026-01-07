@@ -6,6 +6,7 @@ export const knowledgeBase = {
     keywords: ['javascript', 'python', 'react', 'node', 'code', 'programming', 'function', 'variable', 'array', 'object', 'api', 'database', 'sql', 'html', 'css', 'git', 'github', 'algorithm', 'debug', 'error', 'bug', 'framework', 'library', 'npm', 'package'],
     responses: {
       friendly: {
+        // eslint-disable-next-line no-template-curly-in-string
         javascript: "JavaScript is a versatile programming language! Here's a quick example:\n\n```javascript\n// Arrow function example\nconst greet = (name) => `Hello, ${name}!`;\nconsole.log(greet('World'));\n```\n\nJavaScript is great for web development, especially with React! What specific JavaScript topic interests you?",
         python: "Python is an amazing language! It's known for its simplicity and readability. Here's a simple example:\n\n```python\ndef greet(name):\n    return f\"Hello, {name}!\"\n\nprint(greet('World'))\n```\n\nPython is perfect for data science, web development, and automation! What would you like to learn about Python?",
         react: "React is a powerful JavaScript library for building user interfaces! Here's a basic component:\n\n```jsx\nimport React from 'react';\n\nfunction Greeting({ name }) {\n  return <h1>Hello, {name}!</h1>;\n}\n\nexport default Greeting;\n```\n\nReact uses components, hooks, and JSX to create interactive UIs. What React topic would you like to explore?",
@@ -24,6 +25,7 @@ export const knowledgeBase = {
         general: "Programming is like cooking - sometimes you follow a recipe, sometimes you improvise! 👨‍🍳 What code are we whipping up today?"
       },
       concise: {
+        // eslint-disable-next-line no-template-curly-in-string, no-script-url
         javascript: "JavaScript: Dynamic language for web. Example:\n\n```javascript\nconst greet = name => `Hello, ${name}`;\n```",
         python: "Python: High-level, readable. Example:\n\n```python\ndef greet(name): return f\"Hello, {name}\"\n```",
         react: "React: Component-based UI library. Example:\n\n```jsx\nconst App = () => <div>Hello</div>;\n```",
@@ -380,8 +382,6 @@ export function detectAdvancedIntent(text, conversationHistory = []) {
 
 // Get contextual response based on conversation history
 export function getContextualResponse(intent, personality, conversationHistory = []) {
-  const lastFewMessages = conversationHistory.slice(-4).map(m => m.content.toLowerCase()).join(' ');
-  
   // Check for follow-up questions
   if (conversationHistory.length > 2) {
     const previousTopic = detectAdvancedIntent(conversationHistory[conversationHistory.length - 2].content, conversationHistory);

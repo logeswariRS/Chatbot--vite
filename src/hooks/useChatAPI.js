@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { knowledgeBase, detectAdvancedIntent, getContextualResponse } from './knowledgeBase';
-import { extendedKnowledge, searchExtendedKnowledge } from './extendedKnowledge';
-import { generalKnowledge, generateSmartResponse } from './generalKnowledge';
+import { searchExtendedKnowledge } from './extendedKnowledge';
+import { generateSmartResponse } from './generalKnowledge';
 
 export function useChatAPI(personality = 'friendly') {
   const [isLoading, setIsLoading] = useState(false);

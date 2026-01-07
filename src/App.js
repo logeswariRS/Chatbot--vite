@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatInterface from './components/ChatInterface';
 import Header from './components/Header';
 import { useLocalStorage } from './hooks/useLocalStorage';
